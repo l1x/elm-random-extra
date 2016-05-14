@@ -1,5 +1,4 @@
-module Random.Maybe exposing (..)
-
+module Random.Maybe where
 {-| List of Maybe Generators
 
 # Generators
@@ -7,28 +6,24 @@ module Random.Maybe exposing (..)
 
 -}
 
-import Random exposing (Generator, map)
+import Random       exposing (Generator, map)
 import Random.Extra exposing (constant, frequency, flatMap)
 import Maybe
-
 
 {-| Generate a Maybe from a generator. Will generate Nothings 50% of the time.
 -}
 maybe : Generator a -> Generator (Maybe a)
 maybe generator =
   frequency
-    [ ( 1, constant Nothing )
-    , ( 1, map Just generator )
-    ]
-    (constant Nothing)
-
+    [ (1, constant Nothing)
+    , (1, map Just generator)
+    ] (constant Nothing)
 
 {-| Generate values from a maybe generator or a default value.
 -}
 withDefault : a -> Generator (Maybe a) -> Generator a
 withDefault value generator =
   map (Maybe.withDefault value) generator
-
 
 {-| Generate values from a maybe generator or a default generator.
 -}

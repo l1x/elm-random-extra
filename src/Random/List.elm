@@ -1,5 +1,4 @@
-module Random.List exposing (..)
-
+module Random.List where
 {-| List of List Generators
 
 # Generators
@@ -7,9 +6,8 @@ module Random.List exposing (..)
 
 -}
 
-import Random exposing (Generator, int, list)
+import Random       exposing (Generator, int, list)
 import Random.Extra exposing (flatMap, constant)
-
 
 {-| Generator that always returns the empty list.
 -}
