@@ -1,5 +1,4 @@
-module Random.Set exposing (..)
-
+module Random.Set where
 {-| List of Random Set Generators
 
 # Generators
@@ -10,8 +9,8 @@ module Random.Set exposing (..)
 
 -}
 
-import Set exposing (Set)
-import Random exposing (Generator, map, andThen)
+import Set          exposing (Set)
+import Random       exposing (Generator, map, andThen)
 import Random.Extra exposing (constant, dropIf, keepIf)
 
 
@@ -29,34 +28,33 @@ singleton generator =
   map Set.singleton generator
 
 
-{-| Filter a generator of all values not in a given set.
+{-| A generator that creates values not present in a given set.
 -}
 notInSet : Set comparable -> Generator comparable -> Generator comparable
 notInSet set generator =
   dropIf (flip Set.member set) generator
 
 
-{-| Select a value from a set uniformly at random, or `Nothing` for an empty set.
-Analogous to `Random.Extra.select` but with sets.
+
+{-| Generate values from a set.
+Analogous to `Random.Extra.select` but with sets
 -}
 select : Set comparable -> Generator (Maybe comparable)
 select set =
   Random.Extra.select (Set.toList set)
 
-
-{-| Select a value from a set uniformly at random, with a default.
-Analogous to `Random.Extra.selectWithDefault` but with sets.
+{-| Generate values from a set or a default value.
+Analogous to `Random.Extra.selectWithDefault` but with sets
 -}
 selectWithDefault : comparable -> Set comparable -> Generator comparable
 selectWithDefault default set =
   Random.Extra.selectWithDefault default (Set.toList set)
 
-
 {-| Generate a set of at most the given size from a generator.
 
 The size of a generated set is limited both by the integer provided and the
-number of unique values the generator can produce. It is very likely, but not
-guaranteed, that generated sets will be as big as the smaller of these two limits.
+number of unique values the generator can generate. It is very likely, but not
+guaranteed, that generated sets will be as big as the smaller of the two limits.
 -}
 set : Int -> Generator comparable -> Generator (Set comparable)
 set maxLength generator =
@@ -65,15 +63,11 @@ set maxLength generator =
       if remaining <= 0 || strikes == 10 then
         constant set
       else
-        generator
-          `andThen` \val ->
-                      let
-                        newSet =
-                          Set.insert val set
-                      in
-                        if Set.size newSet == Set.size set then
-                          helper set remaining (strikes + 1)
-                        else
-                          helper newSet (remaining - 1) 0
+        generator `andThen` \val ->
+          let newSet = Set.insert val set
+          in if Set.size newSet == Set.size set then
+            helper set remaining (strikes+1)
+          else
+            helper newSet (remaining-1) 0
   in
     helper Set.empty maxLength 0

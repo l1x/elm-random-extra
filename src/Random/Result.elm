@@ -1,5 +1,4 @@
-module Random.Result exposing (..)
-
+module Random.Result where
 {-| List of Result Generators
 
 # Generators
@@ -7,7 +6,7 @@ module Random.Result exposing (..)
 
 -}
 
-import Random exposing (Generator, generate, map, float)
+import Random       exposing (Generator, generate, map, float)
 import Random.Extra exposing (frequency)
 
 
@@ -41,7 +40,6 @@ numbers to your bidding in your own custom generators.
 result : Generator error -> Generator value -> Generator (Result error value)
 result errorGenerator okGenerator =
   frequency
-    [ ( 1, error errorGenerator )
-    , ( 1, ok okGenerator )
-    ]
-    (ok okGenerator)
+    [ (1, error errorGenerator)
+    , (1, ok okGenerator)
+    ] (ok okGenerator)
